@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | The Madras Biryani</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      background: #0D0E12;
+      border: 1px solid #1C1D24;
+      border-radius: 10px;
+      padding: 36px 32px 32px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.95);
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .brand-title {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      color: #71717A;
+      margin-top: 4px;
+      margin-bottom: 26px;
+      display: block;
+    }
+
+    .divider {
+      height: 1px;
+      background: #181920;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #A1A1AA;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .form-input {
+      background: #08090C;
+      border: 1px solid #1C1D24;
+      border-radius: 6px;
+      color: #FFFFFF;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.15s ease;
+      width: 100%;
+    }
+
+    .form-input:focus {
+      border-color: #FFFFFF;
+    }
+
+    .form-input::placeholder {
+      color: #3F3F46;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.88rem;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: #FFFFFF;
+      color: #000000;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-submit:hover {
+      background: #E4E4E7;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error-msg {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #F87171;
+      font-size: 0.8rem;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .login-footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #52525B;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="brand-title">THE MADRAS BIRYANI</div>
+    <span class="brand-sub">Dispatch Console • Restricted Access</span>
+    <div class="divider"></div>
+
+    <div class="error-msg" id="errorMsg">Incorrect password. Please try again.</div>
+
+    <form id="loginForm" autocomplete="off">
+      <div class="form-group">
+        <label for="adminPassword" class="form-label">Admin Password</label>
+        <input 
+          type="password" 
+          id="adminPassword" 
+          class="form-input" 
+          placeholder="Enter console password" 
+          required 
+          autofocus
+        >
+      </div>
+
+      <button type="submit" class="btn-submit" id="btnSubmit">
+        Sign In to Console →
+      </button>
+    </form>
+
+    <div class="login-footer">
+      Authorized kitchen personnel only
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const passwordInput = document.getElementById("adminPassword");
+    const errorMsg = document.getElementById("errorMsg");
+    const btnSubmit = document.getElementById("btnSubmit");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const password = passwordInput.value.trim();
+      if (!password) return;
+
+      errorMsg.style.display = "none";
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Verifying...";
+
+      try {
+        const res = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = "/admin";
+        } else {
+          errorMsg.textContent = data.error || "Incorrect password. Access denied.";
+          errorMsg.style.display = "block";
+          passwordInput.value = "";
+          passwordInput.focus();
+        }
+      } catch (err) {
+        errorMsg.textContent = "Network error. Please try again.";
+        errorMsg.style.display = "block";
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Sign In to Console →";
+      }
+    });
+  </script>
+</body>
+</html>

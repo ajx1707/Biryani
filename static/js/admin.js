@@ -619,6 +619,73 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Password Change Form
+  const passwordForm = document.getElementById("passwordForm");
+  const currentPasswordInput = document.getElementById("currentPassword");
+  const newPasswordInput = document.getElementById("newPassword");
+  const confirmNewPasswordInput = document.getElementById("confirmNewPassword");
+  const passwordAlert = document.getElementById("passwordAlert");
+  const btnChangePassword = document.getElementById("btnChangePassword");
+
+  if (passwordForm) {
+    passwordForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const current_password = currentPasswordInput.value.trim();
+      const new_password = newPasswordInput.value.trim();
+      const confirm_password = confirmNewPasswordInput.value.trim();
+
+      if (!current_password || !new_password) return;
+
+      if (new_password !== confirm_password) {
+        showPasswordAlert("New passwords do not match.", false);
+        return;
+      }
+
+      if (new_password.length < 4) {
+        showPasswordAlert("New password must be at least 4 characters.", false);
+        return;
+      }
+
+      btnChangePassword.disabled = true;
+      btnChangePassword.textContent = "Updating...";
+
+      try {
+        const res = await fetch("/api/admin/change-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ current_password, new_password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showPasswordAlert("Password updated successfully!", true);
+          passwordForm.reset();
+        } else {
+          showPasswordAlert(data.error || "Failed to update password.", false);
+        }
+      } catch (err) {
+        showPasswordAlert("Network error. Please try again.", false);
+      } finally {
+        btnChangePassword.disabled = false;
+        btnChangePassword.textContent = "Update Password";
+      }
+    });
+  }
+
+  function showPasswordAlert(msg, isSuccess) {
+    if (!passwordAlert) return;
+    passwordAlert.textContent = msg;
+    passwordAlert.classList.remove("hidden");
+    if (isSuccess) {
+      passwordAlert.style.background = "rgba(16, 185, 129, 0.1)";
+      passwordAlert.style.border = "1px solid rgba(16, 185, 129, 0.3)";
+      passwordAlert.style.color = "#34D399";
+    } else {
+      passwordAlert.style.background = "rgba(239, 68, 68, 0.1)";
+      passwordAlert.style.border = "1px solid rgba(239, 68, 68, 0.3)";
+      passwordAlert.style.color = "#F87171";
+    }
+  }
+
   // Initial Data Fetch
   fetchLiveOrders();
   fetchTodayCompleted();

@@ -62,6 +62,10 @@
         <a href="/" target="_blank" class="btn-customer-site" title="View Customer Website">
           Customer Site ↗
         </a>
+
+        <a href="/admin/logout" class="btn-admin-logout" title="Log out of admin console">
+          Log Out
+        </a>
       </div>
     </header>
 
@@ -360,6 +364,34 @@
               <input type="text" id="newHostelInput" placeholder="Add new hostel name (e.g. BH-9)">
               <button type="button" id="btnAddHostel" class="btn-add-hostel">+ Add Hostel</button>
             </div>
+          </div>
+
+          <!-- Security & Password Settings -->
+          <div class="settings-card">
+            <h3 class="card-heading">Console Security & Password</h3>
+            <p class="card-desc">Change the master password required to access this kitchen dispatch portal.</p>
+
+            <form id="passwordForm" class="settings-form">
+              <div class="input-field">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" placeholder="Enter current password" required>
+              </div>
+
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="newPassword">New Password</label>
+                  <input type="password" id="newPassword" placeholder="New password (min 4 chars)" required minlength="4">
+                </div>
+                <div class="input-field">
+                  <label for="confirmNewPassword">Confirm New Password</label>
+                  <input type="password" id="confirmNewPassword" placeholder="Confirm new password" required minlength="4">
+                </div>
+              </div>
+
+              <div id="passwordAlert" class="hidden" style="font-size:0.8rem; padding:8px 12px; border-radius:6px; font-family:var(--font-mono);"></div>
+
+              <button type="submit" class="btn-save-settings" id="btnChangePassword">Update Password</button>
+            </form>
           </div>
 
         </div>

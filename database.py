@@ -92,6 +92,7 @@ def init_db():
             "item_weight": "500g",
             "item_price": "150",
             "admin_pin": "1234",
+            "admin_password": os.environ.get("ADMIN_PASSWORD", "madras123"),
             "shop_phone": "9876543210",
             "custom_banner": "🔥 Authentic Madras Dum Biryani • Served hot with boiled egg, raita & salan!",
             "hostels": json.dumps([
@@ -149,6 +150,27 @@ def set_setting(key, value):
         return True
     finally:
         session.close()
+
+
+def get_admin_password():
+    """Get active admin password, supporting DB setting with env var override/fallback."""
+    db_pass = get_setting("admin_password")
+    if db_pass:
+        return db_pass
+    return os.environ.get("ADMIN_PASSWORD", "madras123")
+
+
+def verify_admin_password(entered_pass):
+    """Verify input password against env var or database."""
+    if not entered_pass:
+        return False
+    # Check against environment variable if provided
+    env_pass = os.environ.get("ADMIN_PASSWORD")
+    if env_pass and entered_pass == env_pass:
+        return True
+    # Check against database
+    active_pass = get_admin_password()
+    return entered_pass == active_pass
 
 
 def is_time_between(now_time, start_time, end_time):

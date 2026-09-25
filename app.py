@@ -3,12 +3,14 @@ import shutil
 import csv
 import json
 import io
+from functools import wraps
 from datetime import datetime, time, timedelta
 from flask import Flask, render_template, request, jsonify, send_file, Response, redirect, url_for, session
 from database import (
     init_db, SessionLocal, Order, Setting,
     get_setting, set_setting, check_shop_status,
-    get_now_ist, generate_order_code
+    get_now_ist, generate_order_code,
+    verify_admin_password, get_admin_password
 )
 
 # Initialize Flask application
@@ -225,29 +227,67 @@ def get_order_by_code(order_code):
 
 
 # -------------------------------------------------------------
-# Admin / Team Operations Routes
+# Admin Authentication & Team Operations Routes
 # -------------------------------------------------------------
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("admin_logged_in"):
+            return jsonify({"success": False, "error": "Unauthorized. Please log in to admin console."}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 @app.route("/admin")
 def admin_page():
-    """Admin portal dashboard."""
+    """Admin portal dashboard - requires login."""
+    if not session.get("admin_logged_in"):
+        return render_template("admin_login.html")
     return render_template("admin.html")
 
 
-@app.route("/api/admin/verify-pin", methods=["POST"])
-def verify_admin_pin():
-    """Verify admin PIN."""
+@app.route("/api/admin/login", methods=["POST"])
+def admin_login():
+    """Verify admin password and create session."""
     data = request.get_json() or {}
-    pin = str(data.get("pin", "")).strip()
-    saved_pin = str(get_setting("admin_pin", "1234")).strip()
+    password = str(data.get("password", "")).strip()
 
-    if pin == saved_pin:
-        session["admin_authenticated"] = True
+    if verify_admin_password(password):
+        session["admin_logged_in"] = True
+        session.permanent = True
         return jsonify({"success": True})
-    return jsonify({"success": False, "error": "Incorrect PIN"}), 401
+    return jsonify({"success": False, "error": "Incorrect password. Access denied."}), 401
+
+
+@app.route("/admin/logout")
+@app.route("/api/admin/logout", methods=["GET", "POST"])
+def admin_logout():
+    """Log out admin console session."""
+    session.pop("admin_logged_in", None)
+    return redirect(url_for("admin_page"))
+
+
+@app.route("/api/admin/change-password", methods=["POST"])
+@admin_required
+def admin_change_password():
+    """Change admin password in database."""
+    data = request.get_json() or {}
+    current_pass = str(data.get("current_password", "")).strip()
+    new_pass = str(data.get("new_password", "")).strip()
+
+    if not verify_admin_password(current_pass):
+        return jsonify({"success": False, "error": "Current password is incorrect."}), 400
+
+    if len(new_pass) < 4:
+        return jsonify({"success": False, "error": "New password must be at least 4 characters long."}), 400
+
+    set_setting("admin_password", new_pass)
+    return jsonify({"success": True, "message": "Password updated successfully!"})
 
 
 @app.route("/api/admin/orders/active", methods=["GET"])
+@admin_required
 def get_active_orders():
     """Get live pending & in-progress orders."""
     db = SessionLocal()
@@ -264,6 +304,7 @@ def get_active_orders():
 
 
 @app.route("/api/admin/orders/completed-today", methods=["GET"])
+@admin_required
 def get_completed_today():
     """
     Get all orders marked completed TODAY (IST calendar day).
@@ -304,6 +345,7 @@ def get_completed_today():
 
 
 @app.route("/api/admin/orders/all", methods=["GET"])
+@admin_required
 def get_all_orders():
     """
     Get all orders with filter options:
@@ -365,6 +407,7 @@ def get_all_orders():
 
 
 @app.route("/api/admin/orders/<int:order_id>/status", methods=["POST"])
+@admin_required
 def update_order_status(order_id):
     """Update order status (e.g., mark as completed, cancelled)."""
     data = request.get_json() or {}
@@ -394,6 +437,7 @@ def update_order_status(order_id):
 
 
 @app.route("/api/admin/settings", methods=["GET", "POST"])
+@admin_required
 def admin_settings():
     """Get or update shop settings & operational hours."""
     if request.method == "POST":
@@ -448,6 +492,7 @@ def admin_settings():
 
 
 @app.route("/api/admin/export-csv")
+@admin_required
 def export_csv():
     """Download clean CSV of all orders."""
     db = SessionLocal()

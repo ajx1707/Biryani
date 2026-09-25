@@ -240,6 +240,28 @@ body {
   background: #E4E4E7;
 }
 
+.btn-admin-logout {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-admin-logout:hover {
+  color: #EF4444;
+  border-color: #551D1D;
+  background: rgba(239, 68, 68, 0.06);
+}
+
 /* -------------------------------------------------------------
    Main Admin Dashboard Container
    ------------------------------------------------------------- */
