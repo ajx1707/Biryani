@@ -159,30 +159,83 @@ document.addEventListener("DOMContentLoaded", () => {
       const waText = encodeURIComponent(
         `Hi ${o.customer_name}! Your Madras Biryani order #${o.order_code} (${o.quantity} pack) for ${o.hostel} is being prepared fresh. Arriving soon!`
       );
-      const locationText = o.room_number ? `${o.hostel}, Room ${o.room_number}` : o.hostel;
+      const placedAgo = o.created_at_raw ? timeAgo(o.created_at_raw) : (o.created_at || "Just now");
+      const packLabel = o.quantity === 1 ? 'PACK' : 'PACKS';
+      const paymentMethod = (o.payment_method || 'Cash / UPI').toUpperCase();
+
       return `
         <div class="order-card-live" id="order-card-${o.id}">
+          <!-- Top Row: ID, Pulse Indicator, Timestamp -->
           <div class="card-top-row">
-            <span class="order-code-tag">#${o.order_code}</span>
-            <span class="order-timestamp">${o.created_at || "Just now"}</span>
-          </div>
-
-          <div class="customer-info-box">
-            <div class="cust-name">${o.customer_name}</div>
-            <div class="cust-location">${locationText}</div>
-            <div class="contact-quick-links">
-              <a href="tel:${o.phone}" class="quick-contact-btn">Call ${o.phone}</a>
-              <a href="https://wa.me/91${o.phone}?text=${waText}" target="_blank" class="quick-contact-btn">WhatsApp</a>
+            <div class="card-code-status">
+              <span class="order-code-tag">#${o.order_code}</span>
+              <span class="order-status-badge">
+                <span class="live-dot-pulse"></span> ACTIVE
+              </span>
+            </div>
+            <div class="card-time-group" title="${o.created_at || ''}">
+              <span class="order-relative-time">${placedAgo}</span>
             </div>
           </div>
 
-          <div class="order-item-summary">
-            <div class="item-name-qty">${o.quantity} × Chicken Dum Biryani (500g)</div>
-            <div class="item-total-amount">₹${o.total_price}</div>
+          <!-- Quantity & Item Highlight Banner (Crystal clear for kitchen) -->
+          <div class="order-pack-banner">
+            <div class="pack-qty-badge">
+              <span class="qty-num">${o.quantity}</span>
+              <span class="qty-unit">${packLabel}</span>
+            </div>
+            <div class="pack-details-col">
+              <div class="pack-item-name">Chicken Dum Biryani (500g)</div>
+              <div class="pack-meta-row">
+                <span class="pack-price">₹${o.total_price}</span>
+                <span class="meta-dot">•</span>
+                <span class="pack-payment">${paymentMethod}</span>
+              </div>
+            </div>
           </div>
 
-          ${o.notes ? `<div class="order-notes-tag">Note: "${o.notes}"</div>` : ""}
+          <!-- Structured Destination & Customer Grid -->
+          <div class="order-dispatch-details">
+            <div class="dispatch-col hostel-col">
+              <span class="dispatch-label">DELIVER TO / HOSTEL</span>
+              <div class="dispatch-val">
+                <span class="hostel-name-text">${o.hostel}</span>
+                ${o.room_number ? `<span class="room-pill">Room ${o.room_number}</span>` : ''}
+              </div>
+            </div>
+            <div class="dispatch-col student-col">
+              <span class="dispatch-label">STUDENT NAME</span>
+              <div class="dispatch-val">
+                <span class="student-name-text">${o.customer_name}</span>
+              </div>
+            </div>
+          </div>
 
+          <!-- Quick Contact Actions -->
+          <div class="contact-actions-strip">
+            <a href="tel:${o.phone}" class="quick-contact-btn btn-call" title="Call ${o.phone}">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>Call ${o.phone}</span>
+            </a>
+            <a href="https://wa.me/91${o.phone}?text=${waText}" target="_blank" class="quick-contact-btn btn-wa" title="Chat on WhatsApp">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+              <span>WhatsApp</span>
+            </a>
+          </div>
+
+          <!-- Special Instructions Note -->
+          ${o.notes ? `
+            <div class="order-kitchen-note">
+              <span class="note-pill">NOTE</span>
+              <span class="note-text">"${o.notes}"</span>
+            </div>
+          ` : ""}
+
+          <!-- Card Actions -->
           <div class="card-actions-row">
             <button type="button" class="btn-complete-order" onclick="window.promptCompleteOrder(${o.id})">
               Mark Completed
@@ -240,10 +293,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const order = activeOrdersCache.get(orderId);
 
     if (order) {
+      const loc = order.room_number ? `${order.hostel} (Room ${order.room_number})` : (order.hostel || "-");
+      const packText = order.quantity === 1 ? '1 pack' : `${order.quantity} packs`;
       if (modalCompleteOrderCode) modalCompleteOrderCode.textContent = `Complete Order #${order.order_code}`;
       if (modalCompleteCustName) modalCompleteCustName.textContent = order.customer_name || "-";
-      if (modalCompleteLocation) modalCompleteLocation.textContent = order.hostel || "-";
-      if (modalCompleteItems) modalCompleteItems.textContent = `${order.quantity} × Chicken Dum Biryani (500g)`;
+      if (modalCompleteLocation) modalCompleteLocation.textContent = loc;
+      if (modalCompleteItems) modalCompleteItems.textContent = `${packText} • Chicken Dum Biryani (500g)`;
       if (modalCompleteTotal) modalCompleteTotal.textContent = `₹${order.total_price}`;
     } else {
       if (modalCompleteOrderCode) modalCompleteOrderCode.textContent = "Complete Order";

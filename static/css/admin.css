@@ -431,57 +431,245 @@ body {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 12px;
+  padding-bottom: 10px;
+}
+
+.card-code-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .order-code-tag {
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 700;
   color: #FFFFFF;
   letter-spacing: 0.04em;
 }
 
-.order-timestamp {
+.order-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #111218;
+  border: 1px solid #232530;
+  border-radius: 9999px;
+  padding: 2px 7px;
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #E4E4E7;
+  letter-spacing: 0.06em;
+}
+
+.live-dot-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 10px rgba(34, 197, 94, 0.9); }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.card-time-group {
+  text-align: right;
+}
+
+.order-relative-time {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
   color: var(--text-muted);
 }
 
-.customer-info-box {
+/* =============================================================
+   Hero Quantity & Biryani Banner
+   Unmissable pack callout for kitchen & packaging staff
+   ============================================================= */
+.order-pack-banner {
+  background: var(--bg-card-subtle);
+  border: 1px solid #232530;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pack-qty-badge {
+  background: #FFFFFF;
+  color: #000000;
+  border-radius: var(--radius-xs);
+  min-width: 62px;
+  padding: 5px 8px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-.cust-name {
-  font-size: 1.05rem;
+.qty-num {
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.qty-unit {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-top: 3px;
+}
+
+.pack-details-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pack-item-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pack-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.pack-price {
+  font-family: var(--font-mono);
   font-weight: 700;
   color: #FFFFFF;
+  font-size: 0.88rem;
 }
 
-.cust-location {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+.meta-dot {
+  color: var(--text-dim);
 }
 
-.contact-quick-links {
+.pack-payment {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* =============================================================
+   Structured Destination & Customer Grid
+   Zero confusion between student name and delivery hostel
+   ============================================================= */
+.order-dispatch-details {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 10px;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.dispatch-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dispatch-label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.dispatch-val {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hostel-name-text {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.room-pill {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 2px 7px;
+  background: #181920;
+  border: 1px solid #2F323E;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #E4E4E7;
+}
+
+.student-name-text {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-transform: capitalize;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+/* =============================================================
+   Contact Quick Links
+   ============================================================= */
+.contact-actions-strip {
   display: flex;
   gap: 8px;
-  margin-top: 4px;
 }
 
 .quick-contact-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: var(--bg-card-subtle);
   border: 1px solid var(--border-card);
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  padding: 5px 12px;
+  padding: 6px 10px;
   border-radius: var(--radius-xs);
   text-decoration: none;
   transition: all 0.15s ease;
+}
+
+.quick-contact-btn svg {
+  flex-shrink: 0;
+  opacity: 0.75;
 }
 
 .quick-contact-btn:hover {
@@ -490,42 +678,47 @@ body {
   border-color: #3F3F46;
 }
 
-.order-item-summary {
-  background: var(--bg-card-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.quick-contact-btn:hover svg {
+  opacity: 1;
 }
 
-.item-name-qty {
-  font-size: 0.86rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.item-total-amount {
-  font-family: var(--font-mono);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #FFFFFF;
-}
-
-.order-notes-tag {
-  background: var(--bg-card-subtle);
-  border: 1px solid var(--border-card);
+/* Special Note Alert */
+.order-kitchen-note {
+  background: #121319;
+  border: 1px dashed #2F323E;
   border-radius: var(--radius-xs);
-  padding: 8px 12px;
+  padding: 7px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: #D4D4D8;
 }
 
+.note-pill {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  background: #27272A;
+  color: #FFFFFF;
+  padding: 2px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.note-text {
+  flex: 1;
+  font-style: italic;
+  word-break: break-word;
+}
+
+/* Card Actions */
 .card-actions-row {
   display: flex;
   gap: 10px;
   align-items: center;
+  margin-top: 2px;
 }
 
 .btn-complete-order {
@@ -1231,5 +1424,15 @@ body {
   }
   .form-row-2 {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .live-orders-grid {
+    grid-template-columns: 1fr;
+  }
+  .order-dispatch-details {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
