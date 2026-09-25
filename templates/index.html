@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>The Madras Biryani | Late Night Campus Cravings</title>
+  <meta name="description" content="Order fresh, authentic Madras Chicken Dum Biryani (500g for ₹150) delivered right to your campus hostel. Pay on Delivery.">
+  
+  <!-- Google Fonts: Playfair Display (Heritage Editorial Serif) & Plus Jakarta Sans (Modern Clean UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" type="image/jpeg" href="/static/images/logo.jpeg">
+  
+  <style>
+    :root {
+      --logo-bg: {{ logo_bg_color|default('#804318') }};
+    }
+    .brand-hero {
+      background-color: var(--logo-bg) !important;
+      background: var(--logo-bg) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main App Container -->
+  <div class="app-wrapper">
+
+    <!-- Top Branding Banner (Seamless Madras Brown Palette matching logo.jpeg) -->
+    <header class="brand-hero">
+      <div class="logo-box">
+        <img src="/static/images/logo.jpeg" alt="The Madras Biryani Logo" class="brand-logo" onerror="this.onerror=null; this.src='/logo.jpeg';">
+      </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="content-container">
+
+      <!-- Catchy Campus Headline -->
+      <div class="headline-container">
+        <h1 class="campus-headline">LATE NIGHT CAMPUS CRAVINGS</h1>
+        <p class="campus-tagline">Authentic Hot Madras Dum Biryani • Served Fresh to Your Hostel</p>
+      </div>
+
+      <!-- Main Ordering Form Wrapper with Responsive Grid -->
+      <form id="orderForm" autocomplete="on">
+        <div class="desktop-split-layout">
+          
+          <!-- Left Column on PC: Food Showcase Card -->
+          <div class="layout-col-food">
+            <section class="item-card">
+              <div class="item-image-wrapper">
+                <img src="/static/images/chicken.png" alt="Signature Madras Chicken Biryani" class="item-image" onerror="this.onerror=null; this.src='/chicken.png';">
+                <span class="portion-badge">500g Hearty Portion</span>
+              </div>
+              
+              <div class="item-details">
+                <div class="item-header-row">
+                  <div>
+                    <h2 class="item-title" id="itemName">{{ item_name }}</h2>
+                    <p class="item-recipe">Aromatic Dum Biryani with Tender Chicken, Boiled Egg, Raita & Spicy Salan</p>
+                  </div>
+                  <div class="item-price-tag">
+                    <span class="currency">₹</span><span class="amount" id="unitPrice">{{ item_price }}</span>
+                  </div>
+                </div>
+
+                <!-- Quantity Stepper -->
+                <div class="quantity-controller">
+                  <span class="qty-label">Quantity:</span>
+                  <div class="stepper-controls">
+                    <button type="button" class="step-btn" id="btnMinus" aria-label="Decrease quantity">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                    <span class="qty-number" id="qtyDisplay">1</span>
+                    <button type="button" class="step-btn" id="btnPlus" aria-label="Increase quantity">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                  </div>
+                  <div class="subtotal-badge">
+                    Total: <strong id="subtotalDisplay">₹{{ item_price }}</strong>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column on PC: Delivery Details & Submit Action -->
+          <div class="layout-col-form">
+            <section class="order-form-card">
+              
+              <!-- Name Field -->
+              <div class="form-group">
+                <label for="custName" class="form-label">
+                  <svg class="input-icon icon-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  Your Name
+                </label>
+                <input 
+                  type="text" 
+                  id="custName" 
+                  class="form-control" 
+                  placeholder="Enter your name" 
+                  required
+                >
+              </div>
+
+              <!-- Phone Number Field -->
+              <div class="form-group">
+                <label for="custPhone" class="form-label">
+                  <svg class="input-icon icon-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  Phone Number
+                </label>
+                <input 
+                  type="tel" 
+                  id="custPhone" 
+                  class="form-control" 
+                  placeholder="Enter mobile number" 
+                  pattern="[0-9]{10}"
+                  maxlength="10"
+                  required
+                >
+              </div>
+
+              <!-- Hostel Selection Dropdown -->
+              <div class="form-group">
+                <label for="custHostel" class="form-label">
+                  <svg class="input-icon icon-orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  Select Hostel / Address
+                </label>
+                <div class="select-wrapper">
+                  <select id="custHostel" class="form-control select-control" required>
+                    <option value="" disabled selected>Choose your hostel</option>
+                    {% for h in hostels %}
+                      <option value="{{ h }}">{{ h }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+            </section>
+
+            <!-- Simple, Classy Payment Note -->
+            <div class="payment-hint-simple">
+              <span class="pay-icon">💳</span>
+              <span class="pay-label">Payment on Delivery</span>
+              <span class="pay-dot">•</span>
+              <span class="pay-mode">Cash or UPI upon arrival</span>
+            </div>
+
+            <!-- Order Submit Button -->
+            <div class="submit-action-box">
+              <button 
+                type="submit" 
+                id="submitOrderBtn" 
+                class="btn-primary-order {{ 'disabled' if not status.is_open else '' }}"
+                {{ 'disabled' if not status.is_open else '' }}
+              >
+                <span class="btn-text">Confirm Order</span>
+                <span class="btn-subtotal" id="btnSubtotal">₹{{ item_price }}</span>
+              </button>
+              <p id="closedAlert" class="closed-notice {{ 'hidden' if status.is_open else '' }}">
+                ⚠️ Orders currently paused. Please check back during opening hours.
+              </p>
+            </div>
+          </div>
+
+        </div><!-- /desktop-split-layout -->
+      </form>
+
+      <!-- Minimal, Clean Footer -->
+      <footer class="app-footer">
+        <p class="footer-copy">© The Madras Biryani • Campus Kitchen</p>
+        <p class="admin-link-wrapper">
+          <a href="/admin" class="admin-direct-link">Staff Portal →</a>
+        </p>
+      </footer>
+
+    </main>
+
+  </div><!-- /app-wrapper -->
+
+
+  <!-- ========================================================= -->
+  <!-- MODAL 1: ORDER CONFIRMATION POPUP -->
+  <!-- ========================================================= -->
+  <div id="confirmModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-box modal-confirm">
+      
+      <div class="modal-header">
+        <h3 class="modal-title">Confirm Your Order</h3>
+        <button type="button" class="modal-close-btn" id="closeConfirmModal" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="confirm-intro">Please verify your delivery details before placing:</p>
+        
+        <div class="summary-receipt-preview">
+          <div class="receipt-row">
+            <span class="row-label">Item:</span>
+            <span class="row-val" id="cfmItemTitle">Signature Biryani (500g)</span>
+          </div>
+          <div class="receipt-row">
+            <span class="row-label">Quantity:</span>
+            <span class="row-val highlight-val" id="cfmQuantity">1 pack</span>
+          </div>
+          <div class="receipt-row">
+            <span class="row-label">Deliver To:</span>
+            <span class="row-val" id="cfmName">Rahul Sharma</span>
+          </div>
+          <div class="receipt-row">
+            <span class="row-label">Contact:</span>
+            <span class="row-val" id="cfmPhone">+91 9876543210</span>
+          </div>
+          <div class="receipt-row">
+            <span class="row-label">Address:</span>
+            <span class="row-val" id="cfmAddress">Kaveri Hostel, Room 314</span>
+          </div>
+          <div class="receipt-row" id="cfmNotesRow">
+            <span class="row-label">Notes:</span>
+            <span class="row-val" id="cfmNotes">-</span>
+          </div>
+          <div class="receipt-row payment-row">
+            <span class="row-label">Payment:</span>
+            <span class="row-val">Pay on Delivery (UPI / Cash)</span>
+          </div>
+          <div class="receipt-divider"></div>
+          <div class="receipt-row total-row">
+            <span class="row-label">Total to Pay:</span>
+            <span class="row-val total-price" id="cfmTotalPrice">₹150</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="btnEditOrder">Edit Details</button>
+        <button type="button" class="btn-confirm-final" id="btnFinalPlaceOrder">
+          <span class="spinner hidden" id="orderSpinner"></span>
+          <span>Confirm & Order Now</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- MODAL 2: SUCCESS & RECEIPT DOWNLOAD POPUP -->
+  <!-- ========================================================= -->
+  <div id="successModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-box modal-success">
+      
+      <div class="success-top-celebration">
+        <div class="success-badge-icon">✓</div>
+        <h3 class="success-title">Order Placed Successfully!</h3>
+        <p class="success-subtitle">The kitchen has received your order and is packing it hot.</p>
+        <div class="order-id-pill">
+          Order Code: <strong id="successOrderCode">#MB-1001</strong>
+        </div>
+      </div>
+
+      <!-- Printable / Downloadable Receipt Card Element -->
+      <div class="receipt-card-wrapper" id="receiptPrintableArea">
+        <div class="receipt-card">
+          <div class="receipt-card-header">
+            <div class="receipt-logo-title">THE MADRAS BIRYANI</div>
+            <div class="receipt-tagline">Campus Late Night Kitchen</div>
+            <div class="receipt-meta">
+              <span id="rcptDate">25 Sep 2026, 09:45 PM</span> • <span id="rcptCode">#MB-1001</span>
+            </div>
+          </div>
+
+          <div class="receipt-section-divider"></div>
+
+          <div class="receipt-cust-info">
+            <div><strong>Customer:</strong> <span id="rcptCustName">-</span></div>
+            <div><strong>Phone:</strong> <span id="rcptCustPhone">-</span></div>
+            <div><strong>Hostel:</strong> <span id="rcptCustLocation">-</span></div>
+          </div>
+
+          <table class="receipt-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Chicken Dum Biryani (500g)</td>
+                <td id="rcptTableQty">1</td>
+                <td id="rcptTableRate">₹150</td>
+                <td class="text-right" id="rcptTableTotal">₹150</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="receipt-bill-summary">
+            <div class="bill-row">
+              <span>Subtotal:</span>
+              <span id="rcptSubtotal">₹150</span>
+            </div>
+            <div class="bill-row">
+              <span>Delivery Charge:</span>
+              <span class="free-text">FREE Campus Delivery</span>
+            </div>
+            <div class="bill-row grand-total">
+              <span>Amount Due:</span>
+              <span id="rcptGrandTotal">₹150</span>
+            </div>
+            <div class="bill-row payment-status">
+              <span>Payment Mode:</span>
+              <span>Cash / UPI on Delivery</span>
+            </div>
+          </div>
+
+          <div class="receipt-footer">
+            <p>Thank you for supporting your campus startup! ❤️</p>
+            <p class="receipt-contact">Kitchen Helpline: <span id="rcptPhoneHelpline">9876543210</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions: Clean Direct PDF Download -->
+      <div class="receipt-action-buttons">
+        <button type="button" class="btn-download-receipt" id="btnDownloadReceipt">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download PDF Receipt
+        </button>
+
+        <button type="button" class="btn-close-final" id="btnCloseSuccessModal">Done</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Client-side PDF generation: HTML2Canvas + jsPDF (Direct PDF download) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

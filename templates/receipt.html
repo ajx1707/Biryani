@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receipt #{{ order.order_code }} | The Madras Biryani</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0D0E12;
+      color: #1A1A1A;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px;
+      min-height: 100vh;
+    }
+    .receipt-container {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 12px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+    .receipt-header {
+      text-align: center;
+      border-bottom: 2px dashed #DDD;
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+    }
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #8D4014;
+      letter-spacing: 1px;
+    }
+    .brand-sub {
+      font-size: 0.76rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .receipt-meta {
+      font-size: 0.82rem;
+      color: #333;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .order-code-badge {
+      display: inline-block;
+      background: #FFF3E0;
+      color: #8D4014;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid #FFE0B2;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+    .info-section {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      color: #333;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .info-label {
+      color: #666;
+    }
+    .info-val {
+      font-weight: 600;
+      text-align: right;
+    }
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    .receipt-table th {
+      text-align: left;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      color: #777;
+      padding: 8px 4px;
+      border-bottom: 1px solid #CCC;
+    }
+    .receipt-table td {
+      padding: 10px 4px;
+      font-size: 0.88rem;
+      border-bottom: 1px dashed #EEE;
+    }
+    .text-right { text-align: right; }
+    .bill-summary {
+      border-top: 1px solid #CCC;
+      padding-top: 10px;
+      margin-top: 6px;
+      font-size: 0.88rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bill-row {
+      display: flex;
+      justify-content: space-between;
+      color: #444;
+    }
+    .grand-total {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #111;
+      border-top: 1px dashed #777;
+      padding-top: 8px;
+      margin-top: 4px;
+    }
+    .payment-badge {
+      background: #E8F5E9;
+      color: #2E7D32;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+    .receipt-footer {
+      border-top: 2px dashed #DDD;
+      margin-top: 20px;
+      padding-top: 14px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #666;
+    }
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .btn-action {
+      flex: 1;
+      background: #8D4014;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-action:hover { background: #A44C19; }
+    .btn-secondary {
+      background: #272A36;
+      color: #fff;
+    }
+    .btn-secondary:hover { background: #353847; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .action-row { display: none; }
+      .receipt-container { box-shadow: none; max-width: 100%; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="receipt-container" id="printableInvoice">
+    <div class="receipt-header">
+      <div class="brand-title">THE MADRAS BIRYANI</div>
+      <div class="brand-sub">Campus Cloud Kitchen • Fresh Late Night Cravings</div>
+      <div class="order-code-badge">Order #{{ order.order_code }}</div>
+      <div class="receipt-meta">{{ order.created_at }}</div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-row">
+        <span class="info-label">Customer Name:</span>
+        <span class="info-val">{{ order.customer_name }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Phone:</span>
+        <span class="info-val">+91 {{ order.phone }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Delivery Hostel:</span>
+        <span class="info-val">{{ order.hostel }}</span>
+      </div>
+    </div>
+
+    <table class="receipt-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Rate</th>
+          <th class="text-right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ item_name }} ({{ item_weight }})</td>
+          <td>{{ order.quantity }}</td>
+          <td>₹{{ order.unit_price }}</td>
+          <td class="text-right">₹{{ order.total_price }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="bill-summary">
+      <div class="bill-row">
+        <span>Subtotal:</span>
+        <span>₹{{ order.total_price }}</span>
+      </div>
+      <div class="bill-row">
+        <span>Delivery Fee:</span>
+        <span style="color:#2E7D32; font-weight:600;">FREE (Hostel Delivery)</span>
+      </div>
+      <div class="bill-row grand-total">
+        <span>Total Amount Due:</span>
+        <span>₹{{ order.total_price }}</span>
+      </div>
+      <div class="bill-row" style="margin-top:6px;">
+        <span>Payment Method:</span>
+        <span class="payment-badge">Cash / UPI on Delivery</span>
+      </div>
+      <div class="bill-row">
+        <span>Order Status:</span>
+        <span style="text-transform: capitalize; font-weight: 600;">{{ order.status }}</span>
+      </div>
+    </div>
+
+    <div class="receipt-footer">
+      <p>❤️ Thank you for ordering from The Madras Biryani!</p>
+      <p style="margin-top:3px;">Helpline: +91 {{ shop_phone }}</p>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button type="button" class="btn-action" onclick="window.print()">Print / Save PDF</button>
+    <a href="/" class="btn-action btn-secondary">Back to Order Page</a>
+  </div>
+
+</body>
+</html>

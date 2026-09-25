@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console | The Madras Biryani</title>
+  
+  <!-- Modern Clean Engineering Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <link rel="icon" type="image/jpeg" href="/static/images/logo.jpeg">
+</head>
+<body>
+
+  <div class="admin-layout">
+
+    <!-- Top Admin Header (Monochromatic Developer Console Bar) -->
+    <header class="admin-header">
+      <div class="admin-brand">
+        <span class="admin-app-name">THE MADRAS BIRYANI</span>
+        <span class="header-slash">/</span>
+        <span class="admin-app-role">Dispatch Console</span>
+      </div>
+
+      <!-- Segmented Navigation Pills in Header -->
+      <nav class="admin-nav-tabs">
+        <button type="button" class="nav-tab active" data-tab="tabLive">
+          <span>Live Queue</span>
+          <span class="tab-badge" id="liveCountBadge">0</span>
+        </button>
+
+        <button type="button" class="nav-tab" data-tab="tabToday">
+          <span>Completed Today</span>
+          <span class="tab-badge secondary-badge" id="todayCountBadge">0</span>
+        </button>
+
+        <button type="button" class="nav-tab" data-tab="tabTotal">
+          <span>History & Analytics</span>
+        </button>
+
+        <button type="button" class="nav-tab" data-tab="tabSettings">
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <div class="header-right-actions">
+        <!-- Live Status Pill in Header -->
+        <div id="hdrShopPill" class="shop-pill pill-open">
+          <span class="pill-dot"></span>
+          <span id="hdrShopStatusText">Open</span>
+        </div>
+
+        <!-- Audio Alert Toggle -->
+        <button type="button" class="btn-sound-toggle" id="btnAudioToggle" title="Toggle audio alert on new orders">
+          <span class="sound-dot"></span>
+          <span id="soundText">Sound ON</span>
+        </button>
+
+        <a href="/" target="_blank" class="btn-customer-site" title="View Customer Website">
+          Customer Site ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="admin-main">
+
+      <!-- ======================================================== -->
+      <!-- TOP METRICS STRIP (Monochromatic KPI Row)                -->
+      <!-- ======================================================== -->
+      <section class="overview-metrics-grid">
+        <div class="metric-card">
+          <span class="metric-label">ACTIVE QUEUE</span>
+          <div class="metric-value-row">
+            <span class="metric-num" id="topLiveCount">0</span>
+            <span class="metric-sub">/ active</span>
+          </div>
+          <div class="metric-divider"></div>
+          <span class="metric-footer">Waiting for kitchen dispatch</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-label">TODAY'S REVENUE</span>
+          <div class="metric-value-row">
+            <span class="metric-num">₹<span id="topTodayRevenue">0</span></span>
+          </div>
+          <div class="metric-divider"></div>
+          <span class="metric-footer">Cash & UPI fulfilled today</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-label">COMPLETED ORDERS</span>
+          <div class="metric-value-row">
+            <span class="metric-num" id="topTodayOrders">0</span>
+            <span class="metric-sub">/ orders</span>
+          </div>
+          <div class="metric-divider"></div>
+          <span class="metric-footer"><span id="topTodayPortions">0</span> biryani packs sold</span>
+        </div>
+
+        <div class="metric-card">
+          <span class="metric-label">SCHEDULE CADENCE</span>
+          <div class="metric-value-row">
+            <span class="metric-num" id="topCadence">7:00 PM / 1:00 AM</span>
+          </div>
+          <div class="metric-divider"></div>
+          <span class="metric-footer">Indian Standard Time (IST)</span>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 1: LIVE ORDERS (NEW & IN-PROGRESS)                   -->
+      <!-- ======================================================== -->
+      <section id="tabLive" class="tab-content active">
+        <div class="section-title-bar">
+          <div>
+            <h2 class="section-heading">Active Orders Queue</h2>
+            <p class="section-subtext">Real-time campus orders waiting to be prepared or delivered. Updates automatically.</p>
+          </div>
+          <div class="flex-actions">
+            <button type="button" class="btn-refresh" id="btnRefreshActive">
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <div id="liveOrdersContainer" class="live-orders-grid">
+          <!-- Dynamic Order Cards Loaded via admin.js -->
+          <div class="empty-state">
+            <h3 class="empty-title">Loading active orders...</h3>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ======================================================== -->
+      <!-- TAB 2: COMPLETED TODAY (DAILY REVENUE & ORDERS)          -->
+      <!-- ======================================================== -->
+      <section id="tabToday" class="tab-content">
+        <div class="section-title-bar">
+          <div>
+            <h2 class="section-heading">Completed Today</h2>
+            <p class="section-subtext" id="todayDateSubtitle">Orders completed today. Automatically resets at midnight for the new day.</p>
+          </div>
+          <div class="flex-actions">
+            <button type="button" class="btn-refresh" id="btnRefreshToday">
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Today Summary KPI Cards (Hidden by default since top strip covers it, but kept in DOM for backward-compat) -->
+        <div class="stats-row hidden" style="display:none;">
+          <div class="kpi-card">
+            <span id="kpiTodayRevenue">0</span>
+            <span id="kpiTodayOrders">0</span>
+            <span id="kpiTodayPortions">0</span>
+            <span id="kpiTodayWeight">0 kg total</span>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Time Placed</th>
+                <th>Completed Time</th>
+                <th>Customer</th>
+                <th>Hostel</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="todayOrdersTableBody">
+              <!-- Loaded via JS -->
+            </tbody>
+          </table>
+          <div id="todayEmptyState" class="empty-state hidden">
+            <h3 class="empty-title">No orders completed yet today</h3>
+            <p class="empty-desc">Orders marked as completed will appear here along with your daily revenue.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ======================================================== -->
+      <!-- TAB 3: TOTAL ORDERS & ANALYTICS                          -->
+      <!-- ======================================================== -->
+      <section id="tabTotal" class="tab-content">
+        <div class="section-title-bar">
+          <div>
+            <h2 class="section-heading">History & Analytics</h2>
+            <p class="section-subtext">Comprehensive order history with date filtering and data export.</p>
+          </div>
+          <div class="flex-actions">
+            <a href="/api/admin/export-csv" class="btn-export-csv" download>
+              Export CSV
+            </a>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-bar">
+          <div class="filter-pills" id="filterPills">
+            <button type="button" class="pill-filter active" data-period="all">All Time</button>
+            <button type="button" class="pill-filter" data-period="month">This Month</button>
+            <button type="button" class="pill-filter" data-period="week">This Week</button>
+            <button type="button" class="pill-filter" data-period="today">Today</button>
+          </div>
+
+          <div class="search-box">
+            <input type="text" id="orderSearchInput" placeholder="Search order ID, student, hostel...">
+          </div>
+        </div>
+
+        <!-- Filtered Metrics Strip -->
+        <div class="mini-metrics-row">
+          <div class="mini-metric-item">
+            <span class="mini-metric-label">FILTERED REVENUE</span>
+            <strong class="mini-metric-val" id="filteredRev">₹0</strong>
+          </div>
+          <div class="mini-metric-item">
+            <span class="mini-metric-label">ORDERS COUNT</span>
+            <strong class="mini-metric-val" id="filteredCount">0</strong>
+          </div>
+          <div class="mini-metric-item">
+            <span class="mini-metric-label">BIRYANI PACKS</span>
+            <strong class="mini-metric-val" id="filteredPortions">0</strong>
+          </div>
+          <div class="mini-metric-item">
+            <span class="mini-metric-label">AVG ORDER VALUE</span>
+            <strong class="mini-metric-val" id="filteredAov">₹0</strong>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date & Time</th>
+                <th>Customer</th>
+                <th>Hostel</th>
+                <th>Qty</th>
+                <th>Amount</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="allOrdersTableBody">
+              <!-- Loaded via JS -->
+            </tbody>
+          </table>
+          <div id="allEmptyState" class="empty-state hidden">
+            <h3 class="empty-title">No orders match this filter</h3>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ======================================================== -->
+      <!-- TAB 4: SHOP TIMINGS & STATUS SETTINGS                    -->
+      <!-- ======================================================== -->
+      <section id="tabSettings" class="tab-content">
+        <div class="section-title-bar">
+          <div>
+            <h2 class="section-heading">Settings & Timings</h2>
+            <p class="section-subtext">Manage operational hours, emergency store controls, and menu details.</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          
+          <!-- Master Shop Toggle Card -->
+          <div class="settings-card">
+            <h3 class="card-heading">Shop Master Status</h3>
+            <p class="card-desc">Instantly toggle ordering availability. If paused, customers cannot place orders regardless of time.</p>
+
+            <div class="master-toggle-container">
+              <div class="toggle-status-info">
+                <span id="currentStatusBadge" class="status-badge-lg badge-open">● SHOP IS CURRENTLY ACTIVE</span>
+                <p id="currentStatusHint" class="toggle-hint">Customer site accepts orders during operational hours.</p>
+              </div>
+
+              <button type="button" id="btnToggleMasterShop" class="btn-toggle-switch btn-close-shop">
+                Close Shop Entirely
+              </button>
+            </div>
+          </div>
+
+          <!-- Operational Timings Card -->
+          <div class="settings-card">
+            <h3 class="card-heading">Daily Operating Hours</h3>
+            <p class="card-desc">Set your campus opening and closing time. Orders outside this window are automatically blocked.</p>
+
+            <form id="timingsForm" class="settings-form">
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="setOpeningTime">Opening Time</label>
+                  <input type="time" id="setOpeningTime" value="19:00" required>
+                  <span class="field-hint">e.g. 19:00 (7:00 PM)</span>
+                </div>
+
+                <div class="input-field">
+                  <label for="setClosingTime">Closing Time</label>
+                  <input type="time" id="setClosingTime" value="01:00" required>
+                  <span class="field-hint">e.g. 01:00 (1:00 AM past midnight)</span>
+                </div>
+              </div>
+
+              <div class="input-field">
+                <label for="setCustomBanner">Customer Announcement Banner</label>
+                <input type="text" id="setCustomBanner" placeholder="e.g. Fresh hot Biryani prepared nightly with authentic spices!">
+              </div>
+
+              <button type="submit" class="btn-save-settings">Save Timings & Banner</button>
+            </form>
+          </div>
+
+          <!-- Pricing & Menu Settings -->
+          <div class="settings-card">
+            <h3 class="card-heading">Product & Pricing</h3>
+            <p class="card-desc">Set the standard portion rate for the 500g Chicken Dum Biryani.</p>
+
+            <form id="pricingForm" class="settings-form">
+              <div class="form-row-2">
+                <div class="input-field">
+                  <label for="setItemPrice">Portion Price (₹)</label>
+                  <input type="number" id="setItemPrice" min="50" max="1000" value="150" required>
+                  <span class="field-hint">Current: ₹150 per 500g portion</span>
+                </div>
+
+                <div class="input-field">
+                  <label for="setShopPhone">Kitchen Helpline</label>
+                  <input type="tel" id="setShopPhone" placeholder="9876543210" required>
+                  <span class="field-hint">For order support calls</span>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-save-settings">Save Pricing & Phone</button>
+            </form>
+          </div>
+
+          <!-- Campus Hostels Manager -->
+          <div class="settings-card">
+            <h3 class="card-heading">Campus Hostels Dropdown</h3>
+            <p class="card-desc">Add or remove hostels available in the customer address dropdown.</p>
+
+            <div class="hostels-list-box" id="hostelsTagList">
+              <!-- Loaded via JS -->
+            </div>
+
+            <div class="add-hostel-row">
+              <input type="text" id="newHostelInput" placeholder="Add new hostel name (e.g. BH-9)">
+              <button type="button" id="btnAddHostel" class="btn-add-hostel">+ Add Hostel</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: COMPLETE ORDER CONFIRMATION POPUP                  -->
+  <!-- ========================================================= -->
+  <div id="completeConfirmModal" class="admin-modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="admin-modal-box">
+      <div class="modal-header">
+        <div>
+          <span class="modal-eyebrow">CONFIRM FULFILLMENT</span>
+          <h3 class="modal-title" id="modalCompleteOrderCode">Complete Order</h3>
+        </div>
+        <button type="button" class="btn-modal-close" id="btnCloseCompleteModal" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-prompt-text">Mark this order as fulfilled and delivered?</p>
+        
+        <div class="modal-order-summary">
+          <div class="modal-summary-row">
+            <span class="lbl">Customer</span>
+            <span class="val" id="modalCompleteCustName">-</span>
+          </div>
+          <div class="modal-summary-row">
+            <span class="lbl">Hostel</span>
+            <span class="val" id="modalCompleteLocation">-</span>
+          </div>
+          <div class="modal-summary-row">
+            <span class="lbl">Items</span>
+            <span class="val" id="modalCompleteItems">-</span>
+          </div>
+          <div class="modal-summary-row modal-total-row">
+            <span class="lbl">Total Amount</span>
+            <span class="val" id="modalCompleteTotal">-</span>
+          </div>
+        </div>
+
+        <p class="modal-note-sub">Moving to completed will update tonight's revenue and remove it from the active queue.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" id="btnCancelCompleteModal">Cancel</button>
+        <button type="button" class="btn-modal-confirm" id="btnConfirmCompleteAction">
+          Yes, Mark Completed
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Chime Element for New Orders -->
+  <audio id="orderAudio" preload="auto">
+    <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..." type="audio/wav">
+  </audio>
+
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

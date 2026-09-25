@@ -1,0 +1,1205 @@
+/* ==========================================================================
+   THE MADRAS BIRYANI - CUSTOMER INTERFACE DESIGN SYSTEM
+   Palette: Madras Terracotta (#8D4014), Obsidian Night (#0E0E12), 
+            Warm Turmeric Gold (#F5A623), Crisp Ivory (#FCFBF7)
+   ========================================================================== */
+
+:root {
+  --madras-brown: #8D4014;
+  --madras-brown-dark: #6D300E;
+  --madras-brown-light: #A44C19;
+  --gold-accent: #F5A623;
+  --gold-glow: rgba(245, 166, 35, 0.25);
+  --gold-text: #FFBE59;
+  
+  --bg-night: #0B0B0E;
+  --bg-card: #15151A;
+  --bg-card-hover: #1C1C22;
+  --bg-input: #1D1E24;
+  --border-subtle: #2D2E37;
+  --border-focus: #A44C19;
+
+  --text-main: #FCFBF7;
+  --text-muted: #9DA0AE;
+  --text-dim: #6B6E7D;
+  
+  --success-green: #10B981;
+  --danger-red: #EF4444;
+  
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 4px 20px rgba(141, 64, 20, 0.35);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-night);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Constrained Mobile & Desktop Container */
+.app-wrapper {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background-color: var(--bg-night);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* -------------------------------------------------------------
+   Brand Hero Banner (Seamless Madras Brown Palette matching logo.jpeg)
+   ------------------------------------------------------------- */
+.brand-hero {
+  background-color: var(--logo-bg, #804318) !important;
+  background: var(--logo-bg, #804318) !important;
+  padding: 55px 20px 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-bottom: none !important;
+}
+
+.logo-box {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  justify-content: center;
+}
+
+.brand-logo {
+  max-width: 100%;
+  height: auto;
+  max-height: 190px;
+  object-fit: contain;
+  filter: none !important;
+  box-shadow: none !important;
+  display: block;
+}
+
+/* -------------------------------------------------------------
+   Operational Status Bar - Completely hidden as requested
+   ------------------------------------------------------------- */
+.status-banner {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------
+   Main Content Area
+   ------------------------------------------------------------- */
+.content-container {
+  padding: 24px 20px 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background-color: #0B0B0E;
+}
+
+/* Headline matching user's screenshot */
+.headline-container {
+  text-align: center;
+  padding: 6px 0 6px;
+}
+
+.campus-headline {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: #E69D37;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(230, 157, 55, 0.45);
+  margin-bottom: 0;
+}
+
+.campus-tagline {
+  font-size: 0.82rem;
+  color: #9DA0AE;
+  margin-top: 6px;
+  letter-spacing: 0.3px;
+}
+
+/* Base Mobile Layout for Split Container */
+.desktop-split-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.layout-col-food,
+.layout-col-form {
+  width: 100%;
+}
+
+/* -------------------------------------------------------------
+   Product / Biryani Showcase Card
+   ------------------------------------------------------------- */
+.item-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.item-card:hover {
+  border-color: rgba(141, 64, 20, 0.6);
+}
+
+.item-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: #121215;
+}
+
+.item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.item-card:hover .item-image {
+  transform: scale(1.03);
+}
+
+.portion-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(14, 14, 18, 0.85);
+  backdrop-filter: blur(6px);
+  color: var(--gold-text);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(245, 166, 35, 0.4);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.item-details {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.item-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.item-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+.item-recipe {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.item-price-tag {
+  display: flex;
+  align-items: baseline;
+  background: linear-gradient(135deg, rgba(141, 64, 20, 0.3) 0%, rgba(245, 166, 35, 0.15) 100%);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  white-space: nowrap;
+}
+
+.item-price-tag .currency {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gold-text);
+  margin-right: 2px;
+}
+
+.item-price-tag .amount {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--gold-text);
+}
+
+/* Quantity Controller */
+.quantity-controller {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-input);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.qty-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.stepper-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #121317;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #2B2C35;
+}
+
+.step-btn {
+  background: var(--madras-brown);
+  border: none;
+  color: var(--text-main);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.step-btn:hover {
+  background: var(--madras-brown-light);
+  transform: scale(1.06);
+}
+
+.step-btn:active {
+  transform: scale(0.94);
+}
+
+.qty-number {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  min-width: 24px;
+  text-align: center;
+}
+
+.subtotal-badge {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.subtotal-badge strong {
+  color: var(--gold-text);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* -------------------------------------------------------------
+   Order Details Form
+   ------------------------------------------------------------- */
+.order-form-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #F3F4F6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.icon-purple { stroke: #CCA472 !important; }
+.icon-orange { stroke: #D28B46 !important; }
+
+.form-control {
+  width: 100%;
+  background-color: #17181D;
+  border: 1px solid #252731;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 14px 16px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #8D4014;
+  box-shadow: 0 0 0 3px rgba(141, 64, 20, 0.25);
+  background-color: #1C1E25;
+}
+
+.form-control::placeholder {
+  color: #555866;
+  font-size: 0.92rem;
+}
+
+/* Custom Select Dropdown */
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper::after {
+  content: "▾";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #D28B46;
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.select-control {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 36px;
+}
+
+.select-control option {
+  background-color: #17181f;
+  color: #fff;
+  padding: 10px;
+}
+
+/* -------------------------------------------------------------
+   Classy Minimal Payment Note (No flashy green box!)
+   ------------------------------------------------------------- */
+.payment-hint-simple {
+  margin-top: 14px;
+  background: #14151B;
+  border: 1px solid #232530;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  color: #D3D0C9;
+}
+
+.payment-hint-simple .pay-icon {
+  font-size: 1.05rem;
+}
+
+.payment-hint-simple .pay-label {
+  font-weight: 700;
+  color: #E2A346;
+}
+
+.payment-hint-simple .pay-dot {
+  color: #555765;
+}
+
+.payment-hint-simple .pay-mode {
+  color: #9AA0AF;
+  font-size: 0.82rem;
+}
+
+/* -------------------------------------------------------------
+   Submit Button
+   ------------------------------------------------------------- */
+.submit-action-box {
+  margin-top: 22px;
+}
+
+.btn-primary-order {
+  width: 100%;
+  background: linear-gradient(135deg, var(--madras-brown-light) 0%, var(--madras-brown) 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(245, 166, 35, 0.4);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: var(--shadow-glow);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-order:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b8551d 0%, #8D4014 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(141, 64, 20, 0.5);
+}
+
+.btn-primary-order:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary-order.disabled,
+.btn-primary-order:disabled {
+  background: #2A2B33;
+  color: #717382;
+  border-color: #383944;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-subtotal {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: var(--gold-text);
+  font-size: 0.95rem;
+}
+
+.closed-notice {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #F87171;
+  text-align: center;
+}
+
+/* -------------------------------------------------------------
+   Minimal Clean Footer
+   ------------------------------------------------------------- */
+.app-footer {
+  margin-top: 14px;
+  text-align: center;
+  padding: 20px 0 10px;
+  border-top: 1px solid #1C1D24;
+}
+
+.footer-copy {
+  font-size: 0.78rem;
+  color: #6C6F7D;
+  letter-spacing: 0.5px;
+}
+
+.admin-link-wrapper {
+  margin-top: 8px;
+}
+
+.admin-direct-link {
+  font-size: 0.76rem;
+  color: #7D8090;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.admin-direct-link:hover {
+  color: #E2A346;
+}
+
+/* -------------------------------------------------------------
+   Modals
+   ------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(4, 5, 8, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.hidden {
+  display: none;
+  opacity: 0;
+}
+
+.modal-box {
+  background: #16171E;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.confirm-intro {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.summary-receipt-preview {
+  background-color: #101116;
+  border: 1px dashed #343644;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 0.85rem;
+}
+
+.row-label {
+  color: var(--text-muted);
+}
+
+.row-val {
+  color: var(--text-main);
+  font-weight: 500;
+  text-align: right;
+  max-width: 60%;
+}
+
+.highlight-val {
+  color: var(--gold-text);
+  font-weight: 700;
+}
+
+.receipt-divider {
+  height: 1px;
+  background: #2D2E3B;
+  margin: 4px 0;
+}
+
+.total-row {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.total-row .total-price {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--gold-text);
+}
+
+.modal-actions {
+  padding: 16px 20px 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-secondary {
+  flex: 1;
+  background: #242530;
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #2F3040;
+}
+
+.btn-confirm-final {
+  flex: 2;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-confirm-final:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+}
+
+/* -------------------------------------------------------------
+   Success Modal & Printable Receipt Card
+   ------------------------------------------------------------- */
+.modal-success {
+  padding: 24px 20px;
+}
+
+.success-top-celebration {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.success-badge-icon {
+  width: 54px;
+  height: 54px;
+  background: #10B981;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 12px;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+}
+
+.success-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.success-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.order-id-pill {
+  display: inline-block;
+  background: rgba(245, 166, 35, 0.12);
+  border: 1px solid rgba(245, 166, 35, 0.35);
+  color: var(--gold-text);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+/* Printable Receipt Card (Clean & Realistic Design) */
+.receipt-card-wrapper {
+  margin: 16px 0 22px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.receipt-card {
+  background: #FFFFFF;
+  color: #1A1A1A;
+  padding: 22px 20px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+}
+
+.receipt-card-header {
+  text-align: center;
+}
+
+.receipt-logo-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #8D4014;
+}
+
+.receipt-tagline {
+  font-size: 0.72rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.receipt-meta {
+  font-size: 0.74rem;
+  color: #444;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.receipt-section-divider {
+  height: 1px;
+  background: #DDD;
+  margin: 12px 0;
+  border-top: 1px dashed #BBB;
+}
+
+.receipt-cust-info {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.receipt-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.receipt-table th {
+  border-bottom: 1px solid #CCC;
+  text-align: left;
+  padding: 6px 4px;
+  font-size: 0.76rem;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.receipt-table td {
+  padding: 8px 4px;
+  border-bottom: 1px dashed #EEE;
+  font-size: 0.82rem;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.receipt-bill-summary {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-top: 1px solid #CCC;
+  padding-top: 8px;
+}
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  color: #444;
+}
+
+.free-text {
+  color: #10B981;
+  font-weight: 600;
+}
+
+.grand-total {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #111;
+  border-top: 1px dashed #888;
+  padding-top: 6px;
+  margin-top: 4px;
+}
+
+.payment-status {
+  font-size: 0.76rem;
+  color: #8D4014;
+  font-weight: 700;
+}
+
+.receipt-footer {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px dashed #CCC;
+  text-align: center;
+  font-size: 0.72rem;
+  color: #666;
+}
+
+.receipt-contact {
+  font-weight: 600;
+  color: #333;
+  margin-top: 2px;
+}
+
+/* Action Buttons below receipt */
+.receipt-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-download-receipt {
+  width: 100%;
+  background: linear-gradient(135deg, var(--madras-brown-light) 0%, var(--madras-brown) 100%);
+  color: #fff;
+  border: none;
+  padding: 13px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-download-receipt:hover {
+  background: linear-gradient(135deg, #b8551d 0%, #8D4014 100%);
+}
+
+.btn-close-final {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-close-final:hover {
+  color: var(--text-main);
+}
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------
+   DESKTOP / PC RESPONSIVE DESIGN
+   Expands from mobile phone container to a luxurious 2-column
+   campus dining portal on laptops and PC screens.
+   ------------------------------------------------------------- */
+@media (min-width: 860px) {
+  body {
+    padding: 34px 20px 50px;
+    background-color: #07070A;
+    background-image: 
+      radial-gradient(ellipse 85% 55% at 50% -8%, rgba(141, 64, 20, 0.22) 0%, transparent 65%),
+      radial-gradient(circle at 8% 25%, rgba(245, 166, 35, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 92% 70%, rgba(141, 64, 20, 0.07) 0%, transparent 45%);
+    background-attachment: fixed;
+  }
+
+  .app-wrapper {
+    max-width: 1040px;
+    min-height: auto;
+    border-radius: 24px;
+    border: 1px solid #232532;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(245, 166, 35, 0.08);
+    overflow: hidden;
+    background-color: #0E0F14;
+    margin: 0 auto;
+  }
+
+  .brand-hero {
+    padding: 36px 30px 30px !important;
+  }
+
+  .logo-box {
+    max-width: 380px;
+  }
+
+  .brand-logo {
+    max-height: 180px;
+  }
+
+  .content-container {
+    padding: 36px 44px 46px;
+    gap: 28px;
+    background-color: #0E0F14;
+  }
+
+  .headline-container {
+    padding: 0 0 12px;
+  }
+
+  .campus-headline {
+    font-size: 2.15rem;
+    letter-spacing: 3.5px;
+  }
+
+  .campus-tagline {
+    font-size: 0.96rem;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  /* 2-Column Balanced Desktop Grid */
+  .desktop-split-layout {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 36px;
+    align-items: stretch;
+  }
+
+  .layout-col-food {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .layout-col-food .item-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #14151C;
+    border: 1px solid #252735;
+    border-radius: 20px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .layout-col-food .item-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(141, 64, 20, 0.7);
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.6), 0 0 25px rgba(141, 64, 20, 0.2);
+  }
+
+  .layout-col-food .item-image-wrapper {
+    height: 310px;
+  }
+
+  .layout-col-food .portion-badge {
+    top: 16px;
+    right: 16px;
+    font-size: 0.82rem;
+    padding: 6px 14px;
+  }
+
+  .layout-col-food .item-details {
+    padding: 26px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 22px;
+  }
+
+  .layout-col-food .item-title {
+    font-size: 1.38rem;
+    line-height: 1.3;
+  }
+
+  .layout-col-food .item-recipe {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #9DA0AE;
+    margin-top: 6px;
+  }
+
+  .layout-col-food .item-price-tag {
+    padding: 8px 16px;
+  }
+
+  .layout-col-food .item-price-tag .amount {
+    font-size: 1.55rem;
+  }
+
+  .layout-col-food .quantity-controller {
+    padding: 14px 18px;
+    background: #191B24;
+    border: 1px solid #292B3A;
+    border-radius: 14px;
+  }
+
+  .layout-col-food .step-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .layout-col-food .qty-number {
+    font-size: 1.25rem;
+    min-width: 32px;
+  }
+
+  .layout-col-food .subtotal-badge {
+    font-size: 1rem;
+  }
+
+  .layout-col-food .subtotal-badge strong {
+    font-size: 1.15rem;
+  }
+
+  /* Form Column on Desktop */
+  .layout-col-form {
+    background: #14151C;
+    border: 1px solid #252735;
+    border-radius: 20px;
+    padding: 28px 26px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .order-form-card {
+    gap: 20px;
+  }
+
+  .form-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #F0F2F6;
+  }
+
+  .form-control {
+    padding: 15px 18px;
+    font-size: 1rem;
+    background-color: #191B24;
+    border: 1px solid #2A2C3B;
+    border-radius: 12px;
+  }
+
+  .form-control:focus {
+    border-color: #A44C19;
+    box-shadow: 0 0 0 3px rgba(164, 76, 25, 0.3);
+    background-color: #1D1F2A;
+  }
+
+  .payment-hint-simple {
+    margin-top: 20px;
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    background: #191B24;
+    border: 1px solid #282A38;
+    border-radius: 12px;
+  }
+
+  .submit-action-box {
+    margin-top: 24px;
+  }
+
+  .btn-primary-order {
+    padding: 17px 24px;
+    font-size: 1.05rem;
+    border-radius: 14px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+
+  .modal-box {
+    max-width: 480px;
+  }
+
+  .receipt-card {
+    padding: 26px 24px;
+  }
+}
+
+/* -------------------------------------------------------------
+   Print Styles
+   ------------------------------------------------------------- */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .app-wrapper, .modal-overlay, .receipt-action-buttons, .success-top-celebration, .modal-close-btn {
+    display: none !important;
+  }
+  #receiptPrintableArea, .receipt-card {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 400px !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+  }
+}
