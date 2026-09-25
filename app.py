@@ -108,6 +108,13 @@ def serve_root_chicken():
     return send_file(os.path.join(BASE_DIR, "chicken.png"), mimetype="image/png")
 
 
+@app.route("/ping")
+@app.route("/health")
+def ping_keep_alive():
+    """Ultra-lightweight keep-alive endpoint for cron pings."""
+    return jsonify({"status": "alive"}), 200
+
+
 @app.route("/api/shop-status", methods=["GET"])
 def get_shop_status():
     """Return real-time shop status (open/closed, hours, message)."""
