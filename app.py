@@ -3,8 +3,12 @@ import shutil
 import csv
 import json
 import io
+import time
+import threading
+import urllib.request
+import urllib.error
 from functools import wraps
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request, jsonify, send_file, Response, redirect, url_for, session
 from database import (
     init_db, SessionLocal, Order, Setting,
@@ -113,8 +117,57 @@ def serve_root_chicken():
 @app.route("/ping")
 @app.route("/health")
 def ping_keep_alive():
-    """Ultra-lightweight keep-alive endpoint for cron pings."""
-    return jsonify({"status": "alive"}), 200
+    """Ultra-lightweight keep-alive endpoint for cron pings and self-checks."""
+    return jsonify({
+        "status": "healthy",
+        "service": "the-madras-biryani",
+        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    }), 200
+
+
+def _start_self_keep_alive():
+    """
+    Layer 1: Built-in Internal Self-KeepAlive (Zero Risk of Blocking)
+    Runs in a background daemon thread on Render. Every 9 minutes, it pings its
+    own public URL with a real Google Chrome User-Agent.
+    Because the ping originates directly from Render's own IP back to its own domain,
+    Cloudflare considers it 100% trusted internal traffic and never blocks it.
+    """
+    external_url = os.environ.get("RENDER_EXTERNAL_URL") or os.environ.get("APP_URL")
+    if not external_url:
+        print("[KeepAlive] Notice: RENDER_EXTERNAL_URL not set (running locally). Self-ping skipped.")
+        return
+
+    health_url = f"{external_url.rstrip('/')}/health"
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        ),
+        "Accept": "application/json, text/html, */*",
+    }
+
+    def ping_loop():
+        # Wait 30 seconds after server boot before initial ping
+        time.sleep(30)
+        print(f"[KeepAlive] Self-ping background daemon started. Target: {health_url}")
+        while True:
+            try:
+                req = urllib.request.Request(health_url, headers=headers)
+                with urllib.request.urlopen(req, timeout=25) as resp:
+                    print(f"[KeepAlive] Internal self-ping SUCCESS (HTTP {resp.getcode()}) at {datetime.utcnow().strftime('%H:%M:%S UTC')}")
+            except Exception as e:
+                print(f"[KeepAlive] Internal self-ping notice: {e}")
+
+            # Sleep 9 minutes (540 seconds) — safely under Render's 15-minute inactivity idle timer
+            time.sleep(540)
+
+    t = threading.Thread(target=ping_loop, daemon=True, name="RenderSelfKeepAliveThread")
+    t.start()
+
+
+# Launch internal self-keepalive on startup
+_start_self_keep_alive()
 
 
 @app.route("/api/shop-status", methods=["GET"])

@@ -12,6 +12,12 @@ jobs:
     steps:
       - name: Ping Render Service
         run: |
-          echo "Sending keep-alive ping to Render service..."
-          curl -s -f -m 30 "https://the-madras-biryani.onrender.com/ping" || curl -s -f -m 30 "https://the-madras-biryani.onrender.com/" || true
+          echo "Sending keep-alive ping with Chrome User-Agent to prevent Cloudflare bot blocks..."
+          curl -s -f -m 30 \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" \
+            -H "Accept: application/json, text/html, */*" \
+            "https://the-madras-biryani.onrender.com/health" || \
+          curl -s -f -m 30 \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" \
+            "https://the-madras-biryani.onrender.com/ping" || true
           echo "Ping completed successfully."
